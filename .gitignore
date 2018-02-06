@@ -1,0 +1,8 @@
+bin
+obj
+/Properties/
+/.vs/
+*.exe
+*.pdb
+*.suo
+*.csproj.user

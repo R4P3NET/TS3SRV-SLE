@@ -13,9 +13,11 @@ namespace TS3SRV_SLE.Network
         public byte[] AuthKey { get; protected set; }
         public byte[] Payload { get; protected set; }
 
-        public ushort SequenceId { get; protected set; }
+        public byte[] RawPayload { get; set; }
 
-        protected byte PType;
-        protected byte Flags;
+        public ushort SequenceId { get; set; }
+
+        public byte PType { get; set; }
+        public byte Flags { get; set; }
     }
 }

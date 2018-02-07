@@ -15,7 +15,6 @@ namespace TS3SRV_SLE.Network
         private Socket TS3SRV_WEBLIST_SOCKET;
 
         public Action<IncomingPayloadHandler> HandleIncoming;
-        public Action<OutgoingPayloadHandler> HandleOutgoing;
 
         private Logger Log = LogManager.GetCurrentClassLogger();
 
@@ -49,10 +48,19 @@ namespace TS3SRV_SLE.Network
             }
         }
 
-        public void BroadcastServer()
-        {
 
+        public void SendPayload(byte[] Payload)
+        {
+            try
+            {
+                
+            }
+            catch
+            {
+
+            }
         }
+
 
         private void InitializeListener()
         {

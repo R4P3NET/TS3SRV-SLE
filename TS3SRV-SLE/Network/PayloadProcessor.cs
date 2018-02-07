@@ -1,4 +1,5 @@
 ﻿using System;
+using NLog;
 using TS3SRV_SLE.Internal;
 
 namespace TS3SRV_SLE.Network
@@ -6,6 +7,8 @@ namespace TS3SRV_SLE.Network
     public class PayloadProcessor
     {
         private ConnectionHandler CHandler;
+
+        private static readonly Logger Logger = LogManager.GetLogger(Properties.TS3SRV_LOGGER_NAME);
 
         private byte[] TS3SRV_WEBLIST_AUTHKEY;
         private ushort TS3SRV_WEBLIST_SEQUENCEID;
@@ -48,6 +51,7 @@ namespace TS3SRV_SLE.Network
             {
                 Array.Copy(Payload.RawPayload, Properties.TS3SRV_WEBLIST_PROTOCOL_HEADERLEN, Payload.AuthKey, 0, Payload.RawPayload.Length - Properties.TS3SRV_WEBLIST_PROTOCOL_HEADERLEN);
                 TS3SRV_WEBLIST_AUTHKEY = Payload.AuthKey;
+                Logger.Log(LogLevel.Info, "Got Authkey, saving it");
             }
             
             Array.Copy(Payload.RawPayload, 0, Payload.Header, 0, Properties.TS3SRV_WEBLIST_PROTOCOL_HEADERLEN);

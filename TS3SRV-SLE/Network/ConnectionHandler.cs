@@ -16,7 +16,7 @@ namespace TS3SRV_SLE.Network
 
         public Action<IncomingPayloadHandler> HandleIncoming;
 
-        private Logger Log = LogManager.GetCurrentClassLogger();
+        private static readonly Logger Logger = LogManager.GetLogger(Properties.TS3SRV_LOGGER_NAME);
 
         public ConnectionHandler()
         {
@@ -40,6 +40,7 @@ namespace TS3SRV_SLE.Network
                 if(TS3SRV_WEBLIST_SOCKET.Connected)
                 {
                     InitializeListener();
+                    Logger.Log(LogLevel.Info, "Successfully connected to a weblist server, starting to send data");
                 }
             }
             catch

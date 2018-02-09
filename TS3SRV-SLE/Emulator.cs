@@ -1,6 +1,4 @@
 ﻿using System;
-
-
 using TS3SRV_SLE.Network;
 
 namespace TS3SRV_SLE
@@ -9,6 +7,7 @@ namespace TS3SRV_SLE
     {
         static void Main(string[] args)
         {
+            Console.SetOut(new PrefixedWriter());
             TS3ServerListEmulator Emu = new TS3ServerListEmulator();
             for (;;)
                 Console.ReadKey(true);

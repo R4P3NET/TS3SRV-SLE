@@ -14,10 +14,10 @@ namespace TS3SRV_SLE.Network
         public int TS3SRV_CLIENTCOUNT;
         #endregion
 
-        public TS3ServerListEmulator()
+        public TS3ServerListEmulator(ServerProperties serverProperties)
         {
-            var properties = new ServerProperties() { CanCreateChannels = true, Clients = 20, Slots = 32, Name = "hradebka", PasswordProtected = true, Port = 9987};
-            PayloadProcessor PProcessor = new PayloadProcessor(properties);
+            //var properties = new ServerProperties() { CanCreateChannels = true, Clients = 20, Slots = 32, Name = "hradebka", IsPasswordProtected = true, Port = 9987};
+            PayloadProcessor PProcessor = new PayloadProcessor(serverProperties);
 
         }
     }

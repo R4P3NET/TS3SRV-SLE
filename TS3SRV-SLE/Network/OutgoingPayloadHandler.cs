@@ -21,7 +21,7 @@ namespace TS3SRV_SLE.Network
             Header = new byte[Properties.TS3SRV_WEBLIST_PROTOCOL_HEADERLEN];
             PayloadType = PayloadTypes.Dataupload;
             CanCreateChannel = serverProperties.CanCreateChannels;
-            IsPasswordProtected = serverProperties.PasswordProtected;
+            IsPasswordProtected = serverProperties.IsPasswordProtected;
             ServerProperties = serverProperties;
         }
 

@@ -104,6 +104,9 @@ namespace TS3SRV_SLE.Network
                     //Logger.Log(LogLevel.Info, "Successfully added server to the serverlist: " + responseCode);
                     Console.WriteLine("Successfully added server to the serverlist: " + responseCode);
                     TS3SRV_WEBLIST_SEQUENCEID++;
+                    _timer.Interval = 600000;
+                    _timer.Stop();
+                    _timer.Start();
                 } else if (responseCode.Equals(ResponseStatus.Busy))
                 {
                     _timer.Interval = 60000;

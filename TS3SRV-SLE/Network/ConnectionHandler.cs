@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Net;
 using System.Net.Sockets;
-
+using System.Threading.Tasks;
 using NLog;
 using TS3SRV_SLE.Internal;
 
@@ -16,7 +16,7 @@ namespace TS3SRV_SLE.Network
 
         public Action<IncomingPayloadHandler> HandleIncoming;
 
-        private Logger Log = LogManager.GetCurrentClassLogger();
+        private static readonly Logger Logger = LogManager.GetLogger(Properties.TS3SRV_LOGGER_NAME);
 
         public ConnectionHandler()
         {
@@ -37,8 +37,9 @@ namespace TS3SRV_SLE.Network
             try
             {
                 TS3SRV_WEBLIST_SOCKET.Connect(TS3SRV_WEBLIST_ENDPOINT);
-                if(TS3SRV_WEBLIST_SOCKET.Connected)
+                if (TS3SRV_WEBLIST_SOCKET.Connected)
                 {
+                    Logger.Log(LogLevel.Info, "Successfully connected to a weblist server, starting to send data");
                     InitializeListener();
                 }
             }
@@ -49,15 +50,16 @@ namespace TS3SRV_SLE.Network
         }
 
 
-        public void SendPayload(byte[] Payload)
+        public async Task SendPayloadAsync(byte[] payload)
         {
             try
             {
-                
+                //TS3SRV_WEBLIST_SOCKET.BeginSend(Payload, 0, Payload.Length, SocketFlags.None, null, null);
+                await TS3SRV_WEBLIST_SOCKET.SendAsync(payload, SocketFlags.None);
             }
-            catch
+            catch(Exception ex)
             {
-
+                Console.WriteLine(ex);
             }
         }
 
@@ -66,34 +68,35 @@ namespace TS3SRV_SLE.Network
         {
             try
             {
-                SocketHandler SHandler = new SocketHandler()
+                SocketHandler sHandler = new SocketHandler()
                 {
                     TS3SRV_SOCKET = TS3SRV_WEBLIST_SOCKET,
                 };
 
-                TS3SRV_WEBLIST_SOCKET.BeginReceive(SHandler.TS3SRV_SOCKET_BUFFER,0,SHandler.TS3SRV_SOCKET_BUFFER.Length,SocketFlags.None,new AsyncCallback(Listener),SHandler);
+                TS3SRV_WEBLIST_SOCKET.BeginReceive(sHandler.TS3SRV_SOCKET_BUFFER, 0, sHandler.TS3SRV_SOCKET_BUFFER.Length, SocketFlags.None, Listener, sHandler);
             }
-            catch
+            catch (Exception ex)
             {
-
+                Console.WriteLine(ex);
             }
         }
 
-        private void Listener(IAsyncResult AResult)
+        private void Listener(IAsyncResult aResult)
         {
-            SocketHandler SHandler = (SocketHandler)AResult.AsyncState;
-            int RecvLen = SHandler.TS3SRV_SOCKET.EndReceive(AResult);
-            if(RecvLen > 0 && RecvLen <= SHandler.TS3SRV_SOCKET_BUFFER.Length)
+            SocketHandler sHandler = (SocketHandler)aResult.AsyncState;
+            int recvLen = sHandler.TS3SRV_SOCKET.EndReceive(aResult);
+            InitializeListener();
+            if (recvLen > 0 && recvLen <= sHandler.TS3SRV_SOCKET_BUFFER.Length)
             {
                 try
                 {
-                    HandleIncoming(new IncomingPayloadHandler(SHandler.TS3SRV_SOCKET_BUFFER));
-                    //Enter Listener Loop
-                    InitializeListener();
+                    byte[] actualDataBytes = new byte[recvLen];
+                    Array.Copy(sHandler.TS3SRV_SOCKET_BUFFER, 0, actualDataBytes, 0, recvLen);
+                    HandleIncoming(new IncomingPayloadHandler(actualDataBytes));
                 }
-                catch
+                catch(Exception ex)
                 {
-
+                    Console.WriteLine(ex);
                 }
             }
         }

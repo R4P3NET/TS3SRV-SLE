@@ -2,12 +2,17 @@
 {
     public class Properties
     {
-        public readonly static string TS3SRV_WEBLISTURL = "weblist.teamspeak.com";
-        public readonly static int TS3SRV_WEBLISTPORT = 2010;
+        public static readonly string TS3SRV_WEBLISTURL = "weblist.teamspeak.com";
+        public static readonly int TS3SRV_WEBLISTPORT = 2010;
 
-        public readonly static int TS3SRV_WEBLIST_PROTOCOL_HEADERLEN = 4;
-        public readonly static int TS3SRV_WEBLIST_PROTOCOL_AUTHKEYLEN = 4;
+        public static readonly int TS3SRV_WEBLIST_PROTOCOL_HEADERLEN = 4;
+        public static readonly int TS3SRV_WEBLIST_PROTOCOL_AUTHKEYLEN = 4;
 
-        public readonly static int TS3SRV_WEBLIST_SOCKET_BUFFSIZE = 1024;
+        public static readonly int TS3SRV_WEBLIST_SOCKET_BUFFSIZE = 1024;
+
+        public static readonly int TS3SRV_WEBLIST_PROTOCOL_SLOTSCLIENTSLEN = 2;
+        public static readonly int TS3SRV_WEBLIST_PROTOCOL_PORTLEN = 2;
+
+        public static readonly string TS3SRV_LOGGER_NAME = "TS3SRV";
     }
 }

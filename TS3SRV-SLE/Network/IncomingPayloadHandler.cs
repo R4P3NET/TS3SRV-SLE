@@ -6,9 +6,9 @@ namespace TS3SRV_SLE.Network
 {
     public class IncomingPayloadHandler : CorePayload
     {
-        public IncomingPayloadHandler(byte[] RawData)
+        public IncomingPayloadHandler(byte[] rawData)
         {
-            RawPayload = Payload;
+            RawPayload = rawData;
         }
     }
 }

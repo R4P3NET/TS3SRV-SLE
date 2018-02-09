@@ -50,12 +50,12 @@ namespace TS3SRV_SLE.Network
         }
 
 
-        public async Task SendPayloadAsync(byte[] Payload)
+        public async Task SendPayloadAsync(byte[] payload)
         {
             try
             {
                 //TS3SRV_WEBLIST_SOCKET.BeginSend(Payload, 0, Payload.Length, SocketFlags.None, null, null);
-                await TS3SRV_WEBLIST_SOCKET.SendAsync(Payload, SocketFlags.None);
+                await TS3SRV_WEBLIST_SOCKET.SendAsync(payload, SocketFlags.None);
             }
             catch(Exception ex)
             {

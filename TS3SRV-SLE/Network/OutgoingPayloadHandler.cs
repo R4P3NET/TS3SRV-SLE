@@ -25,11 +25,11 @@ namespace TS3SRV_SLE.Network
             ServerProperties = serverProperties;
         }
 
-        public OutgoingPayloadHandler(byte[] RawData, PayloadTypes PType)
+        public OutgoingPayloadHandler(byte[] rawData, PayloadTypes pType)
         {
             Header = new byte[Properties.TS3SRV_WEBLIST_PROTOCOL_HEADERLEN];
-            Payload = RawData;
-            PayloadType = PType;
+            Payload = rawData;
+            PayloadType = pType;
         }
 
         public void ConstructHeader()

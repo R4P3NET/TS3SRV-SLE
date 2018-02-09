@@ -78,26 +78,26 @@ namespace TS3SRV_SLE.Network
         }
 
 
-        private IncomingPayloadHandler ProcessIncomingPayload(IncomingPayloadHandler Payload)
+        private IncomingPayloadHandler ProcessIncomingPayload(IncomingPayloadHandler payload)
         {
-            Payload.AuthKey = new byte[4];
-            Payload.Header = new byte[4];
+            payload.AuthKey = new byte[4];
+            payload.Header = new byte[4];
 
             //Payload Contains Authkey, save it
-            if (Payload.RawPayload.Length == (Properties.TS3SRV_WEBLIST_PROTOCOL_HEADERLEN + Properties.TS3SRV_WEBLIST_PROTOCOL_AUTHKEYLEN))
+            if (payload.RawPayload.Length == (Properties.TS3SRV_WEBLIST_PROTOCOL_HEADERLEN + Properties.TS3SRV_WEBLIST_PROTOCOL_AUTHKEYLEN))
             {
-                Array.Copy(Payload.RawPayload, Properties.TS3SRV_WEBLIST_PROTOCOL_HEADERLEN, Payload.AuthKey, 0, Payload.RawPayload.Length - Properties.TS3SRV_WEBLIST_PROTOCOL_HEADERLEN);
-                TS3SRV_WEBLIST_AUTHKEY = Payload.AuthKey;
+                Array.Copy(payload.RawPayload, Properties.TS3SRV_WEBLIST_PROTOCOL_HEADERLEN, payload.AuthKey, 0, payload.RawPayload.Length - Properties.TS3SRV_WEBLIST_PROTOCOL_HEADERLEN);
+                TS3SRV_WEBLIST_AUTHKEY = payload.AuthKey;
                 awaitingAuthKey = false;
                 Logger.Log(LogLevel.Info, "Got Authkey, saving it. ");
                 Console.WriteLine("GOT AUTH KEY");
             }
 
-            Array.Copy(Payload.RawPayload, 0, Payload.Header, 0, Properties.TS3SRV_WEBLIST_PROTOCOL_HEADERLEN);
+            Array.Copy(payload.RawPayload, 0, payload.Header, 0, Properties.TS3SRV_WEBLIST_PROTOCOL_HEADERLEN);
 
-            if (Payload.RawPayload.Length == Properties.TS3SRV_WEBLIST_PROTOCOL_HEADERLEN + 1)
+            if (payload.RawPayload.Length == Properties.TS3SRV_WEBLIST_PROTOCOL_HEADERLEN + 1)
             {
-                var responseCode = (ResponseStatus)Payload.RawPayload[Payload.RawPayload.Length - 1];
+                var responseCode = (ResponseStatus)payload.RawPayload[payload.RawPayload.Length - 1];
                 Console.WriteLine("Got response: " + responseCode);
                 if (responseCode.Equals(ResponseStatus.Ok))
                 {
@@ -116,20 +116,12 @@ namespace TS3SRV_SLE.Network
             }
 
             //Ignore first header byte as it's not needed
-            Payload.SequenceId = BitConverter.ToUInt16(new byte[2] { Payload.Header[2], Payload.Header[1] }, 0);
-            Payload.PType = Payload.Header[3];
+            payload.SequenceId = BitConverter.ToUInt16(new byte[2] { payload.Header[2], payload.Header[1] }, 0);
+            payload.PType = payload.Header[3];
 
-            TS3SRV_WEBLIST_SEQUENCEID = Payload.SequenceId;
-            return Payload;
+            TS3SRV_WEBLIST_SEQUENCEID = payload.SequenceId;
+            return payload;
         }
-        
-        /*
-        TODO
-        private OutgoingPayloadHandler ProcessOutgoingPayload(byte[] Data, PayloadTypes PType, params PayloadFlags[] Flags)
-        {
-
-        }
-        */
 
         #endregion
     }

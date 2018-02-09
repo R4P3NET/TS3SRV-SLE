@@ -68,12 +68,12 @@ namespace TS3SRV_SLE.Network
         {
             try
             {
-                SocketHandler SHandler = new SocketHandler()
+                SocketHandler sHandler = new SocketHandler()
                 {
                     TS3SRV_SOCKET = TS3SRV_WEBLIST_SOCKET,
                 };
 
-                TS3SRV_WEBLIST_SOCKET.BeginReceive(SHandler.TS3SRV_SOCKET_BUFFER, 0, SHandler.TS3SRV_SOCKET_BUFFER.Length, SocketFlags.None, Listener, SHandler);
+                TS3SRV_WEBLIST_SOCKET.BeginReceive(sHandler.TS3SRV_SOCKET_BUFFER, 0, sHandler.TS3SRV_SOCKET_BUFFER.Length, SocketFlags.None, Listener, sHandler);
             }
             catch (Exception ex)
             {
@@ -81,17 +81,17 @@ namespace TS3SRV_SLE.Network
             }
         }
 
-        private void Listener(IAsyncResult AResult)
+        private void Listener(IAsyncResult aResult)
         {
-            SocketHandler SHandler = (SocketHandler)AResult.AsyncState;
-            int recvLen = SHandler.TS3SRV_SOCKET.EndReceive(AResult);
+            SocketHandler sHandler = (SocketHandler)aResult.AsyncState;
+            int recvLen = sHandler.TS3SRV_SOCKET.EndReceive(aResult);
             InitializeListener();
-            if (recvLen > 0 && recvLen <= SHandler.TS3SRV_SOCKET_BUFFER.Length)
+            if (recvLen > 0 && recvLen <= sHandler.TS3SRV_SOCKET_BUFFER.Length)
             {
                 try
                 {
                     byte[] actualDataBytes = new byte[recvLen];
-                    Array.Copy(SHandler.TS3SRV_SOCKET_BUFFER, 0, actualDataBytes, 0, recvLen);
+                    Array.Copy(sHandler.TS3SRV_SOCKET_BUFFER, 0, actualDataBytes, 0, recvLen);
                     HandleIncoming(new IncomingPayloadHandler(actualDataBytes));
                 }
                 catch(Exception ex)

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Net;
 using System.Net.Sockets;
-
+using System.Threading.Tasks;
 using NLog;
 using TS3SRV_SLE.Internal;
 
@@ -37,10 +37,10 @@ namespace TS3SRV_SLE.Network
             try
             {
                 TS3SRV_WEBLIST_SOCKET.Connect(TS3SRV_WEBLIST_ENDPOINT);
-                if(TS3SRV_WEBLIST_SOCKET.Connected)
+                if (TS3SRV_WEBLIST_SOCKET.Connected)
                 {
-                    InitializeListener();
                     Logger.Log(LogLevel.Info, "Successfully connected to a weblist server, starting to send data");
+                    InitializeListener();
                 }
             }
             catch
@@ -50,15 +50,16 @@ namespace TS3SRV_SLE.Network
         }
 
 
-        public void SendPayload(byte[] Payload)
+        public async Task SendPayloadAsync(byte[] Payload)
         {
             try
             {
-                
+                //TS3SRV_WEBLIST_SOCKET.BeginSend(Payload, 0, Payload.Length, SocketFlags.None, null, null);
+                await TS3SRV_WEBLIST_SOCKET.SendAsync(Payload, SocketFlags.None);
             }
-            catch
+            catch(Exception ex)
             {
-
+                Console.WriteLine(ex);
             }
         }
 
@@ -72,29 +73,30 @@ namespace TS3SRV_SLE.Network
                     TS3SRV_SOCKET = TS3SRV_WEBLIST_SOCKET,
                 };
 
-                TS3SRV_WEBLIST_SOCKET.BeginReceive(SHandler.TS3SRV_SOCKET_BUFFER,0,SHandler.TS3SRV_SOCKET_BUFFER.Length,SocketFlags.None,new AsyncCallback(Listener),SHandler);
+                TS3SRV_WEBLIST_SOCKET.BeginReceive(SHandler.TS3SRV_SOCKET_BUFFER, 0, SHandler.TS3SRV_SOCKET_BUFFER.Length, SocketFlags.None, Listener, SHandler);
             }
-            catch
+            catch (Exception ex)
             {
-
+                Console.WriteLine(ex);
             }
         }
 
         private void Listener(IAsyncResult AResult)
         {
             SocketHandler SHandler = (SocketHandler)AResult.AsyncState;
-            int RecvLen = SHandler.TS3SRV_SOCKET.EndReceive(AResult);
-            if(RecvLen > 0 && RecvLen <= SHandler.TS3SRV_SOCKET_BUFFER.Length)
+            int recvLen = SHandler.TS3SRV_SOCKET.EndReceive(AResult);
+            InitializeListener();
+            if (recvLen > 0 && recvLen <= SHandler.TS3SRV_SOCKET_BUFFER.Length)
             {
                 try
                 {
-                    HandleIncoming(new IncomingPayloadHandler(SHandler.TS3SRV_SOCKET_BUFFER));
-                    //Enter Listener Loop
-                    InitializeListener();
+                    byte[] actualDataBytes = new byte[recvLen];
+                    Array.Copy(SHandler.TS3SRV_SOCKET_BUFFER, 0, actualDataBytes, 0, recvLen);
+                    HandleIncoming(new IncomingPayloadHandler(actualDataBytes));
                 }
-                catch
+                catch(Exception ex)
                 {
-
+                    Console.WriteLine(ex);
                 }
             }
         }

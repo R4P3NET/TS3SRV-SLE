@@ -8,7 +8,7 @@ namespace TS3SRV_SLE.Network
     {
         public IncomingPayloadHandler(byte[] RawData)
         {
-            RawPayload = Payload;
+            RawPayload = RawData;
         }
     }
 }

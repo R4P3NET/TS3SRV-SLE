@@ -6,7 +6,7 @@ namespace TS3SRV_SLE.Internal
     public enum PayloadFlags : byte
     {
         Undefined = 0x00,
-        CanCreateChannel = 0x10,
-        IsPasswordProtected = 0x20,
+        CanCreateChannel = 0x02,
+        IsPasswordProtected = 0x01,
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using TS3SRV_SLE.Internal;
 
 namespace TS3SRV_SLE.Network
 {
@@ -15,7 +16,8 @@ namespace TS3SRV_SLE.Network
 
         public TS3ServerListEmulator()
         {
-            PayloadProcessor PProcessor = new PayloadProcessor();
+            var properties = new ServerProperties() { CanCreateChannels = true, Clients = 20, Slots = 32, Name = "hradebka", PasswordProtected = true, Port = 9987};
+            PayloadProcessor PProcessor = new PayloadProcessor(properties);
 
         }
     }
